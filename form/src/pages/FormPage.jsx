@@ -16,6 +16,7 @@ const RegistrationForm = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({}); // Track touched fields
   const [isFormValid, setIsFormValid] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
 
@@ -80,6 +81,11 @@ const RegistrationForm = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: newValue,
+    }));
+
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true, // Mark the field as touched
     }));
 
     setErrors((prev) => ({
@@ -153,9 +159,11 @@ const RegistrationForm = () => {
   useEffect(() => {
     const newErrors = {};
     Object.keys(formData).forEach((key) => {
+      if (!formData[key]) return;
       const error = validateField(key, formData[key]);
       if (error) newErrors[key] = error;
     });
+    console.log({ newErrors });
 
     setErrors(newErrors);
     setIsFormValid(Object.keys(newErrors).length === 0);
@@ -185,7 +193,7 @@ const RegistrationForm = () => {
         name="fullName"
         value={formData.fullName}
         onChange={handleChange}
-        error={errors.fullName}
+        error={touched.fullName && errors.fullName} // Show error only if touched
         required
         helperText="Enter at least 3 characters"
       />
@@ -196,7 +204,7 @@ const RegistrationForm = () => {
         type="email"
         value={formData.email}
         onChange={handleChange}
-        error={errors.email}
+        error={touched.email && errors.email} // Show error only if touched
         required
         helperText="Enter a valid email address"
       />
@@ -207,7 +215,7 @@ const RegistrationForm = () => {
         type="password"
         value={formData.password}
         onChange={handleChange}
-        error={errors.password}
+        error={touched.password && errors.password} // Show error only if touched
         required
         helperText="Minimum 8 characters, 1 number, 1 special character"
       />
@@ -217,7 +225,7 @@ const RegistrationForm = () => {
         name="phoneNumber"
         value={formData.phoneNumber}
         onChange={handleChange}
-        error={errors.phoneNumber}
+        error={touched.phoneNumber && errors.phoneNumber} // Show error only if touched
         required
         helperText="Enter 10 digits"
       />
@@ -228,7 +236,7 @@ const RegistrationForm = () => {
         type="number"
         value={formData.age}
         onChange={handleChange}
-        error={errors.age}
+        error={touched.age && errors.age} // Show error only if touched
         required
         helperText="Must be between 18 and 65"
         min="18"
@@ -241,7 +249,7 @@ const RegistrationForm = () => {
         options={countries}
         value={formData.country}
         onChange={handleChange}
-        error={errors.country}
+        error={touched.country && errors.country} // Show error only if touched
         required
         helperText="Select your country"
       />
@@ -251,7 +259,7 @@ const RegistrationForm = () => {
         name="agreeToTerms"
         checked={formData.agreeToTerms}
         onChange={handleChange}
-        error={errors.agreeToTerms}
+        error={touched.agreeToTerms && errors.agreeToTerms} // Show error only if touched
         required
         helperText="You must agree to continue"
       />
