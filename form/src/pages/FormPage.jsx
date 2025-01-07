@@ -63,8 +63,13 @@ const RegistrationForm = () => {
           ? ""
           : "Phone number must be exactly 10 digits";
       case "age":
-        const age = parseInt(value);
-        return age >= 18 && age <= 65 ? "" : "Age must be between 18 and 65";
+        const parsedAge = parseInt(value, 10); // Explicitly specify radix 10 (decimal)
+        if (isNaN(parsedAge)) {
+          return "Age must be a number"; // Error if not a valid number
+        }
+        return parsedAge >= 18 && parsedAge <= 65
+          ? ""
+          : "Age must be between 18 and 65";
       case "country":
         return value ? "" : "Please select a country";
       case "agreeToTerms":
